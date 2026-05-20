@@ -5,7 +5,7 @@
   }
 })();
 
-const redirectTo = window.location.origin + '/index.html';
+const redirectTo = new URL('index.html', window.location.href).href;
 
 document.getElementById('btn-google').addEventListener('click', async () => {
   const { error } = await supabaseClient.auth.signInWithOAuth({
