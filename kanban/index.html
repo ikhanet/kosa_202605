@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>칸반보드</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="auth.js"></script>
+</head>
+<body>
+  <header class="app-header">
+    <h1 class="app-title">칸반보드</h1>
+    <div class="user-info">
+      <span id="user-email" class="user-email"></span>
+      <button id="btn-logout" class="btn-logout">로그아웃</button>
+    </div>
+  </header>
+
+  <main class="board">
+
+    <!-- To-Do 컬럼 -->
+    <div class="column" data-column="todo">
+      <div class="column-header">
+        <span class="column-title">To-Do</span>
+        <span class="column-badge">0</span>
+      </div>
+      <div class="card-list"></div>
+      <div class="add-card-area">
+        <button class="btn-add">+ 카드 추가</button>
+        <div class="card-input-form" hidden>
+          <textarea class="card-input" placeholder="할 일을 입력하세요..."></textarea>
+          <div class="input-actions">
+            <button class="btn-confirm">추가</button>
+            <button class="btn-cancel">취소</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- In-Progress 컬럼 -->
+    <div class="column" data-column="inprogress">
+      <div class="column-header">
+        <span class="column-title">In-Progress</span>
+        <span class="column-badge">0</span>
+      </div>
+      <div class="card-list"></div>
+      <div class="add-card-area">
+        <button class="btn-add">+ 카드 추가</button>
+        <div class="card-input-form" hidden>
+          <textarea class="card-input" placeholder="진행 중인 작업을 입력하세요..."></textarea>
+          <div class="input-actions">
+            <button class="btn-confirm">추가</button>
+            <button class="btn-cancel">취소</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Done 컬럼 -->
+    <div class="column" data-column="done">
+      <div class="column-header">
+        <span class="column-title">Done</span>
+        <span class="column-badge">0</span>
+      </div>
+      <div class="card-list"></div>
+      <div class="add-card-area">
+        <button class="btn-add">+ 카드 추가</button>
+        <div class="card-input-form" hidden>
+          <textarea class="card-input" placeholder="완료된 작업을 입력하세요..."></textarea>
+          <div class="input-actions">
+            <button class="btn-confirm">추가</button>
+            <button class="btn-cancel">취소</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

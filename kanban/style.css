@@ -1,0 +1,528 @@
+:root {
+  /* Colors */
+  --color-todo: #3B82F6;
+  --color-inprogress: #F59E0B;
+  --color-done: #10B981;
+  --color-bg: #F1F5F9;
+  --color-surface: #FFFFFF;
+  --color-column-bg: #E2E8F0;
+  --color-text-primary: #1E293B;
+  --color-text-secondary: #64748B;
+  --color-text-on-color: #FFFFFF;
+  --color-drag-over: #DBEAFE;
+  --color-drag-border: #93C5FD;
+  --color-delete-hover: #EF4444;
+
+  /* Typography */
+  --font-base: 'Segoe UI', system-ui, sans-serif;
+  --font-xl: 20px;
+  --font-lg: 16px;
+  --font-md: 14px;
+  --font-sm: 12px;
+  --font-bold: 600;
+  --font-normal: 400;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+
+  /* Border & Shadow */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.10);
+  --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --shadow-column: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-base);
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  min-height: 100vh;
+}
+
+/* ── 헤더 ── */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-lg) var(--space-xl);
+  background-color: var(--color-surface);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.app-title {
+  font-size: var(--font-xl);
+  font-weight: var(--font-bold);
+  color: var(--color-text-primary);
+}
+
+/* ── 사용자 정보 ── */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.user-email {
+  font-size: var(--font-sm);
+  color: var(--color-text-secondary);
+}
+
+.btn-logout {
+  padding: var(--space-xs) var(--space-md);
+  border: 1px solid #CBD5E1;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: var(--font-sm);
+  font-family: var(--font-base);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.btn-logout:hover {
+  background-color: var(--color-delete-hover);
+  color: var(--color-text-on-color);
+  border-color: var(--color-delete-hover);
+}
+
+/* ── 보드 ── */
+.board {
+  display: flex;
+  gap: var(--space-xl);
+  padding: var(--space-xl);
+  align-items: flex-start;
+}
+
+/* ── 컬럼 ── */
+.column {
+  width: 300px;
+  flex-shrink: 0;
+  background-color: var(--color-column-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-column);
+  display: flex;
+  flex-direction: column;
+  transition: background-color 150ms ease, border 150ms ease;
+}
+
+.column.drag-over {
+  background-color: var(--color-drag-over);
+  outline: 2px dashed var(--color-drag-border);
+  outline-offset: -2px;
+}
+
+/* ── 컬럼 헤더 ── */
+.column-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.column[data-column="todo"] .column-header {
+  background-color: var(--color-todo);
+}
+
+.column[data-column="inprogress"] .column-header {
+  background-color: var(--color-inprogress);
+}
+
+.column[data-column="done"] .column-header {
+  background-color: var(--color-done);
+}
+
+.column-title {
+  font-size: var(--font-lg);
+  font-weight: var(--font-bold);
+  color: var(--color-text-on-color);
+}
+
+.column-badge {
+  font-size: var(--font-sm);
+  font-weight: var(--font-bold);
+  color: var(--color-text-on-color);
+  background-color: rgba(255, 255, 255, 0.30);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: 99px;
+  min-width: 24px;
+  text-align: center;
+}
+
+/* ── 카드 목록 ── */
+.card-list {
+  flex: 1;
+  min-height: 80px;
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+/* ── 카드 ── */
+.card {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-card);
+  font-size: var(--font-md);
+  font-weight: var(--font-normal);
+  color: var(--color-text-primary);
+  cursor: grab;
+  transition: transform 150ms ease, box-shadow 150ms ease, opacity 150ms ease;
+  animation: fadeIn 200ms ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+.card:active {
+  cursor: grabbing;
+}
+
+.card.dragging {
+  opacity: 0.4;
+}
+
+.card-text {
+  flex: 1;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+/* ── 카드 삭제 버튼 ── */
+.card-delete {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.card-delete:hover {
+  background-color: var(--color-delete-hover);
+  color: var(--color-text-on-color);
+}
+
+/* ── 카드 추가 영역 ── */
+.add-card-area {
+  padding: var(--space-sm) var(--space-md) var(--space-md);
+}
+
+.btn-add {
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: var(--font-md);
+  font-family: var(--font-base);
+  text-align: left;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: background-color 150ms ease;
+}
+
+.btn-add:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: var(--color-text-primary);
+}
+
+/* ── 카드 입력 폼 ── */
+.card-input-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  animation: slideDown 150ms ease;
+}
+
+.card-input {
+  width: 100%;
+  height: 80px;
+  padding: var(--space-sm);
+  border: 1px solid #CBD5E1;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-base);
+  font-size: var(--font-md);
+  color: var(--color-text-primary);
+  resize: none;
+  outline: none;
+  transition: border-color 150ms ease;
+}
+
+.card-input:focus {
+  border-color: var(--color-todo);
+}
+
+.card-input.error {
+  border-color: var(--color-delete-hover);
+  animation: shake 200ms ease;
+}
+
+.input-actions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.btn-confirm {
+  padding: var(--space-xs) var(--space-md);
+  border: none;
+  background-color: var(--color-todo);
+  color: var(--color-text-on-color);
+  font-size: var(--font-md);
+  font-weight: var(--font-bold);
+  font-family: var(--font-base);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: opacity 150ms ease;
+}
+
+.btn-confirm:hover {
+  opacity: 0.85;
+}
+
+.btn-cancel {
+  padding: var(--space-xs) var(--space-md);
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: var(--font-md);
+  font-family: var(--font-base);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+
+.btn-cancel:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* ── 애니메이션 ── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25%       { transform: translateX(-4px); }
+  75%       { transform: translateX(4px); }
+}
+
+/* ── 반응형 ── */
+@media (max-width: 768px) {
+  .board {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .column {
+    width: 100%;
+  }
+}
+
+/* ── 로그인 페이지 ── */
+body.login-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: var(--color-bg);
+}
+
+.login-container {
+  width: 100%;
+  max-width: 400px;
+  padding: var(--space-xl);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-hover);
+}
+
+.login-title {
+  font-size: var(--font-xl);
+  font-weight: var(--font-bold);
+  color: var(--color-text-primary);
+  text-align: center;
+  margin-bottom: var(--space-xs);
+}
+
+.login-subtitle {
+  font-size: var(--font-sm);
+  color: var(--color-text-secondary);
+  text-align: center;
+  margin-bottom: var(--space-xl);
+}
+
+/* ── OAuth 버튼 ── */
+.oauth-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.btn-oauth {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  width: 100%;
+  padding: var(--space-md);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-md);
+  font-family: var(--font-base);
+  font-weight: var(--font-bold);
+  cursor: pointer;
+  transition: opacity 150ms ease;
+}
+
+.btn-oauth:hover {
+  opacity: 0.85;
+}
+
+.btn-google {
+  border: 1px solid #CBD5E1;
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+}
+
+.btn-github {
+  border: none;
+  background-color: #24292e;
+  color: var(--color-text-on-color);
+}
+
+/* ── 구분선 ── */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin: var(--space-lg) 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-sm);
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background-color: #E2E8F0;
+}
+
+/* ── 이메일 폼 ── */
+.email-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.input-field {
+  width: 100%;
+  padding: var(--space-md);
+  border: 1px solid #CBD5E1;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-base);
+  font-size: var(--font-md);
+  color: var(--color-text-primary);
+  outline: none;
+  transition: border-color 150ms ease;
+}
+
+.input-field:focus {
+  border-color: var(--color-todo);
+}
+
+.email-actions {
+  display: flex;
+  gap: var(--space-sm);
+  margin-top: var(--space-xs);
+}
+
+.btn-primary {
+  flex: 1;
+  padding: var(--space-md);
+  border: none;
+  background-color: var(--color-todo);
+  color: var(--color-text-on-color);
+  font-size: var(--font-md);
+  font-weight: var(--font-bold);
+  font-family: var(--font-base);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: opacity 150ms ease;
+}
+
+.btn-primary:hover {
+  opacity: 0.85;
+}
+
+.btn-secondary {
+  flex: 1;
+  padding: var(--space-md);
+  border: 1px solid #CBD5E1;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: var(--font-md);
+  font-family: var(--font-base);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+
+.btn-secondary:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+/* ── 알림 메시지 ── */
+.auth-message,
+.auth-error {
+  margin-top: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-sm);
+  text-align: center;
+}
+
+.auth-message {
+  background-color: #D1FAE5;
+  color: #065F46;
+}
+
+.auth-error {
+  background-color: #FEE2E2;
+  color: #991B1B;
+}
