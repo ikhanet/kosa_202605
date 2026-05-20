@@ -12,7 +12,10 @@
 <body>
   <header class="app-header">
     <h1 class="app-title">칸반보드</h1>
+    <div id="avatars" class="avatars"></div>
     <div class="user-info">
+      <button id="log-toggle" class="btn-log-toggle">로그</button>
+      <button id="share-btn" class="btn-share">공유 링크 복사</button>
       <span id="user-email" class="user-email"></span>
       <button id="btn-logout" class="btn-logout">로그아웃</button>
     </div>
@@ -78,6 +81,44 @@
     </div>
 
   </main>
+
+  <!-- 카드 상세 모달 -->
+  <div id="card-modal" class="modal-overlay hidden">
+    <div class="modal">
+      <h3 class="modal-title">카드 상세</h3>
+      <textarea id="modal-text" placeholder="카드 내용을 입력하세요..."></textarea>
+      <div class="modal-field">
+        <label for="modal-priority">우선순위</label>
+        <select id="modal-priority">
+          <option value="">없음</option>
+          <option value="high">높음</option>
+          <option value="medium">보통</option>
+          <option value="low">낮음</option>
+        </select>
+      </div>
+      <div class="modal-field">
+        <label for="modal-due-date">마감일</label>
+        <input type="date" id="modal-due-date" />
+      </div>
+      <div class="modal-field">
+        <label for="modal-tags">태그 (쉼표로 구분)</label>
+        <input type="text" id="modal-tags" placeholder="예: 기획, 디자인" />
+      </div>
+      <div class="modal-actions">
+        <button id="modal-cancel" class="btn-modal-cancel">취소</button>
+        <button id="modal-save" class="btn-modal-save">저장</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 활동 로그 사이드패널 -->
+  <aside id="log-panel" class="log-panel hidden">
+    <div class="log-panel-header">
+      <span>활동 로그</span>
+      <button id="log-close" class="btn-log-close">✕</button>
+    </div>
+    <ul id="log-list" class="log-list"></ul>
+  </aside>
 
   <script src="script.js"></script>
 </body>

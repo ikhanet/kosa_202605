@@ -128,6 +128,52 @@
 
 ---
 
+### Card Badge (카드 배지)
+
+```
+.card (flex-direction: column)
+  .card-header (flex-direction: row)
+    .card-text (flex: 1)
+    .card-delete (20px × 20px)
+  .card-badges (flex-wrap: wrap, gap: 4px)
+    .badge (우선순위 — 색상 inline style)
+    .badge-due (마감일 — 회색, 초과 시 빨강)
+    .badge-tag (태그 — 파란색)
+```
+
+배지 공통: `font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 99px; color: white`
+
+| 배지 유형 | 배경색 | 조건 |
+|-----------|--------|------|
+| 우선순위 높음 | `#EF4444` | `priority = "high"` |
+| 우선순위 보통 | `#F59E0B` | `priority = "medium"` |
+| 우선순위 낮음 | `#10B981` | `priority = "low"` |
+| 마감일 | `--color-text-secondary` | `dueDate` 있음 |
+| 마감일 초과 | `--color-delete-hover` | `dueDate < today` |
+| 태그 | `--color-todo` | `tags[]` 각 항목 |
+
+### Card Modal (카드 상세 모달)
+
+- `position: fixed; inset: 0; z-index: 100`
+- 배경: `rgba(0,0,0,0.5)` 반투명 오버레이
+- 모달 박스: `max-width: 480px; padding: 24px; border-radius: --radius-lg`
+- `.hidden` 시 `display: none`
+
+### Log Panel (활동 로그 사이드패널)
+
+- `position: fixed; top: 57px; right: 0; width: 300px; z-index: 50`
+- `.hidden` 시 `transform: translateX(100%)` (슬라이드 아웃, `transition: 250ms ease`)
+- 로그 항목: `.log-item` — 배경 `--color-bg`, 패딩 `8px 12px`
+
+### Avatars (프레전스 아바타)
+
+- 헤더 중앙 배치, `display: flex`
+- 각 아바타: `width: 28px; height: 28px; border-radius: 50%; border: 2px solid white`
+- 겹치기: `margin-left: -6px` (첫 번째는 0)
+- 배경: `--color-todo` (파란색), 텍스트: 이메일 첫 글자 대문자
+
+---
+
 ## 6. 애니메이션
 
 | 상황 | 효과 | 값 |

@@ -59,12 +59,41 @@ body {
   padding: var(--space-lg) var(--space-xl);
   background-color: var(--color-surface);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .app-title {
   font-size: var(--font-xl);
   font-weight: var(--font-bold);
   color: var(--color-text-primary);
+}
+
+/* ── 아바타 (프레전스) ── */
+.avatars {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: var(--color-todo);
+  color: var(--color-text-on-color);
+  font-size: 11px;
+  font-weight: var(--font-bold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-surface);
+  margin-left: -6px;
+  cursor: default;
+}
+
+.avatar:first-child {
+  margin-left: 0;
 }
 
 /* ── 사용자 정보 ── */
@@ -95,6 +124,40 @@ body {
   background-color: var(--color-delete-hover);
   color: var(--color-text-on-color);
   border-color: var(--color-delete-hover);
+}
+
+.btn-share {
+  padding: var(--space-xs) var(--space-md);
+  border: 1px solid var(--color-todo);
+  background: transparent;
+  color: var(--color-todo);
+  font-size: var(--font-sm);
+  font-weight: var(--font-bold);
+  font-family: var(--font-base);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.btn-share:hover {
+  background-color: var(--color-todo);
+  color: var(--color-text-on-color);
+}
+
+.btn-log-toggle {
+  padding: var(--space-xs) var(--space-md);
+  border: 1px solid #CBD5E1;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: var(--font-sm);
+  font-family: var(--font-base);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+
+.btn-log-toggle:hover {
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 /* ── 보드 ── */
@@ -175,9 +238,8 @@ body {
 .card {
   position: relative;
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--space-sm);
+  flex-direction: column;
+  gap: var(--space-xs);
   padding: var(--space-md);
   background-color: var(--color-surface);
   border-radius: var(--radius-sm);
@@ -185,7 +247,7 @@ body {
   font-size: var(--font-md);
   font-weight: var(--font-normal);
   color: var(--color-text-primary);
-  cursor: grab;
+  cursor: pointer;
   transition: transform 150ms ease, box-shadow 150ms ease, opacity 150ms ease;
   animation: fadeIn 200ms ease;
 }
@@ -195,18 +257,57 @@ body {
   box-shadow: var(--shadow-hover);
 }
 
-.card:active {
+.card.dragging {
+  opacity: 0.4;
   cursor: grabbing;
 }
 
-.card.dragging {
-  opacity: 0.4;
+/* 카드 상단 행: 텍스트 + 삭제 버튼 */
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-sm);
 }
 
 .card-text {
   flex: 1;
   line-height: 1.5;
   word-break: break-word;
+}
+
+/* ── 카드 배지 ── */
+.card-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.card-badges:empty {
+  display: none;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: var(--font-bold);
+  padding: 2px 6px;
+  border-radius: 99px;
+  color: var(--color-text-on-color);
+  white-space: nowrap;
+}
+
+.badge-due {
+  background-color: var(--color-text-secondary);
+}
+
+.badge-due.overdue {
+  background-color: var(--color-delete-hover);
+}
+
+.badge-tag {
+  background-color: var(--color-todo);
 }
 
 /* ── 카드 삭제 버튼 ── */
@@ -525,4 +626,209 @@ body.login-page {
 .auth-error {
   background-color: #FEE2E2;
   color: #991B1B;
+}
+
+/* ── 카드 상세 모달 ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal-overlay.hidden {
+  display: none;
+}
+
+.modal {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  box-shadow: var(--shadow-hover);
+}
+
+.modal-title {
+  font-size: var(--font-lg);
+  font-weight: var(--font-bold);
+  color: var(--color-text-primary);
+}
+
+.modal textarea {
+  width: 100%;
+  height: 80px;
+  padding: var(--space-sm);
+  border: 1px solid #CBD5E1;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-base);
+  font-size: var(--font-md);
+  color: var(--color-text-primary);
+  resize: none;
+  outline: none;
+  transition: border-color 150ms ease;
+}
+
+.modal textarea:focus {
+  border-color: var(--color-todo);
+}
+
+.modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.modal-field label {
+  font-size: var(--font-sm);
+  font-weight: var(--font-bold);
+  color: var(--color-text-secondary);
+}
+
+.modal-field select,
+.modal-field input[type="date"],
+.modal-field input[type="text"] {
+  padding: var(--space-sm);
+  border: 1px solid #CBD5E1;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-base);
+  font-size: var(--font-md);
+  color: var(--color-text-primary);
+  outline: none;
+  background-color: var(--color-surface);
+  transition: border-color 150ms ease;
+}
+
+.modal-field select:focus,
+.modal-field input[type="date"]:focus,
+.modal-field input[type="text"]:focus {
+  border-color: var(--color-todo);
+}
+
+.modal-actions {
+  display: flex;
+  gap: var(--space-sm);
+  justify-content: flex-end;
+  margin-top: var(--space-xs);
+}
+
+.btn-modal-save {
+  padding: var(--space-xs) var(--space-lg);
+  border: none;
+  background-color: var(--color-todo);
+  color: var(--color-text-on-color);
+  font-size: var(--font-md);
+  font-weight: var(--font-bold);
+  font-family: var(--font-base);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: opacity 150ms ease;
+}
+
+.btn-modal-save:hover {
+  opacity: 0.85;
+}
+
+.btn-modal-cancel {
+  padding: var(--space-xs) var(--space-lg);
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: var(--font-md);
+  font-family: var(--font-base);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+
+.btn-modal-cancel:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* ── 활동 로그 사이드패널 ── */
+.log-panel {
+  position: fixed;
+  top: 57px;
+  right: 0;
+  width: 300px;
+  height: calc(100vh - 57px);
+  background-color: var(--color-surface);
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.10);
+  display: flex;
+  flex-direction: column;
+  z-index: 50;
+  transition: transform 250ms ease;
+}
+
+.log-panel.hidden {
+  transform: translateX(100%);
+}
+
+.log-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-lg);
+  border-bottom: 1px solid #E2E8F0;
+  font-weight: var(--font-bold);
+  font-size: var(--font-md);
+  color: var(--color-text-primary);
+}
+
+.btn-log-close {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: var(--font-md);
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-sm);
+  padding: 2px var(--space-sm);
+  line-height: 1;
+  transition: background-color 150ms ease;
+}
+
+.btn-log-close:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.log-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-md);
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.log-item {
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-bg);
+}
+
+.log-actor {
+  font-size: var(--font-sm);
+  font-weight: var(--font-bold);
+  color: var(--color-todo);
+  margin-bottom: 2px;
+}
+
+.log-message {
+  font-size: var(--font-sm);
+  color: var(--color-text-primary);
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.log-time {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  margin-top: 2px;
 }
