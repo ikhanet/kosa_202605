@@ -90,12 +90,20 @@ authForm.addEventListener('submit', async e => {
   authSubmit.disabled = false;
 });
 
-logoutBtn.addEventListener('click', () => db.auth.signOut());
+logoutBtn.addEventListener('click', async () => {
+  logoutBtn.disabled = true;
+  await db.auth.signOut();
+  // 로그아웃 후 Supabase 클라이언트 내부 상태를 완전히 초기화해야
+  // 2번째 소셜 로그인 시 PKCE state 오염 없이 동작함
+  window.location.reload();
+});
+
+const oauthRedirectTo = () => `${location.origin}${location.pathname}`;
 
 document.getElementById('google-btn').addEventListener('click', async () => {
   const { error } = await db.auth.signInWithOAuth({
     provider: 'google',
-    options: { redirectTo: window.location.href }
+    options: { redirectTo: oauthRedirectTo() }
   });
   if (error) authMessage.textContent = error.message;
 });
@@ -103,7 +111,7 @@ document.getElementById('google-btn').addEventListener('click', async () => {
 document.getElementById('github-btn').addEventListener('click', async () => {
   const { error } = await db.auth.signInWithOAuth({
     provider: 'github',
-    options: { redirectTo: window.location.href }
+    options: { redirectTo: oauthRedirectTo() }
   });
   if (error) authMessage.textContent = error.message;
 });
